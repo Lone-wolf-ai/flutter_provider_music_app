@@ -33,7 +33,7 @@ class MusicApp extends StatefulWidget {
 }
 
 class _MusicAppState extends State<MusicApp> {
-  String _songname = '';
+  String _songname = 'Select a song from your directory';
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.audio,
@@ -44,40 +44,53 @@ class _MusicAppState extends State<MusicApp> {
       setState(() {
         _songname = file.name;
       });
+      // ignore: use_build_context_synchronously
       await context.read<AudioPlayerControllerProvider>().setSource(file.path!);
+      // ignore: use_build_context_synchronously
       await context.read<AudioPlayerControllerProvider>().play();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Music Player',
-          style: TextStyle(
-              color: Colors.amber, fontSize: 24, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.blueGrey,
+        appBar: AppBar(
+          backgroundColor: Colors.blueGrey,
+          leading: const Icon(
+            Icons.music_note,
+            color: Colors.amber,
+            size: 24,
+          ),
+          title: const Text(
+            'Music Player',
+            style: TextStyle(
+                color: Colors.amber, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          const CDPlayerApp(),
-          const SizedBox(
-            height: 200,
-          ),
-          Text(
-            _songname,
-            style: const TextStyle(
-                color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Expanded(
-            child: AudioPlayerView(
-              controller:
-                  context.watch<AudioPlayerControllerProvider>().controller,
-              picfile: () => _pickFile(),
+        body: Column(
+          children: [
+            const CDPlayerApp(),
+            const SizedBox(
+              height: 200,
             ),
-          ),
-        ],
+            Text(
+              _songname,
+              style: const TextStyle(
+                  color: Colors.amber,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+            Expanded(
+              child: AudioPlayerView(
+                controller:
+                    context.watch<AudioPlayerControllerProvider>().controller,
+                picfile: () => _pickFile(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

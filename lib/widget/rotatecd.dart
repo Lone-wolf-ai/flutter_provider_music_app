@@ -5,6 +5,7 @@ class CDPlayerApp extends StatefulWidget {
   const CDPlayerApp({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CDPlayerAppState createState() => _CDPlayerAppState();
 }
 
@@ -12,7 +13,7 @@ class _CDPlayerAppState extends State<CDPlayerApp>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
+//used initstate
   @override
   void initState() {
     super.initState();

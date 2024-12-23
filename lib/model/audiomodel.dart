@@ -33,6 +33,8 @@ class AudioPlayerModel {
     return await player.getCurrentPosition();
   }
 
+  //stream used to get change data rapidly or you can think it as a stream of data.
+  //used getter method to get data
   Stream<Duration> get onDurationChanged => player.onDurationChanged;
   Stream<Duration> get onPositionChanged => player.onPositionChanged;
   Stream<void> get onPlayerComplete => player.onPlayerComplete;

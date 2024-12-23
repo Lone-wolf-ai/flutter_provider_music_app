@@ -17,101 +17,108 @@ class AudioPlayerView extends StatelessWidget {
     final controller =
         context.watch<AudioPlayerControllerProvider>().controller;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              tooltip: "Play",
-              key: const Key('play_button'),
-              onPressed: controller.isPlaying ? null : controller.play,
-              iconSize: 48.0,
-              icon: const Icon(
-                Icons.play_arrow_rounded,
-                color: Colors.amber,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.amberAccent, width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(18))),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                tooltip: "Play",
+                key: const Key('play_button'),
+                onPressed: controller.isPlaying ? null : controller.play,
+                iconSize: 48.0,
+                icon: Icon(
+                  Icons.play_arrow_rounded,
+                  color: (controller.isPlaying) ? Colors.amber : Colors.grey,
+                ),
+                color: color,
               ),
-              color: color,
-            ),
-            IconButton(
-              key: const Key('pause_button'),
-              onPressed: controller.isPlaying ? controller.pause : null,
-              iconSize: 48.0,
-              icon: const Icon(
-                Icons.pause_rounded,
-                color: Colors.amber,
+              IconButton(
+                key: const Key('pause_button'),
+                onPressed: controller.isPlaying ? controller.pause : null,
+                iconSize: 48.0,
+                icon: Icon(
+                  Icons.pause_rounded,
+                  color: (controller.isPaused) ? Colors.amber : Colors.grey,
+                ),
+                color: color,
               ),
-              color: color,
-            ),
-            IconButton(
-              key: const Key('stop_button'),
-              onPressed: controller.isPlaying || controller.isPaused
-                  ? controller.stop
-                  : null,
-              iconSize: 48.0,
-              icon: const Icon(
-                Icons.stop_rounded,
-                color: Colors.amber,
+              IconButton(
+                key: const Key('stop_button'),
+                onPressed: controller.isPlaying || controller.isPaused
+                    ? controller.stop
+                    : null,
+                iconSize: 48.0,
+                icon: Icon(
+                  Icons.stop_rounded,
+                  color: (controller.isPlaying) ? Colors.amber : Colors.grey,
+                ),
+                color: color,
               ),
-              color: color,
-            ),
-            IconButton(
-              onPressed: () {
-                final position = controller.position ?? Duration.zero;
-                final duration = controller.duration ?? Duration.zero;
-                controller.update(
-                    position + const Duration(seconds: 10), duration);
-              },
-              icon: const Icon(
-                Icons.skip_next_rounded,
-                color: Colors.amber,
-                size: 48,
+              IconButton(
+                onPressed: () {
+                  final position = controller.position ?? Duration.zero;
+                  final duration = controller.duration ?? Duration.zero;
+                  controller.update(
+                      position + const Duration(seconds: 10), duration);
+                },
+                icon: const Icon(
+                  Icons.skip_next_rounded,
+                  color: Colors.amber,
+                  size: 48,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: picfile,
-              icon: const Icon(
-                Icons.list_rounded,
-                color: Colors.amber,
+              IconButton(
+                onPressed: picfile,
+                icon: const Icon(
+                  Icons.list_rounded,
+                  color: Colors.amber,
+                ),
+                iconSize: 36,
               ),
-              iconSize: 36,
-            ),
-          ],
-        ),
-        Slider(
-          activeColor: Colors.amber,
-          inactiveColor: Colors.grey,
-          onChanged: (value) {
-            final duration = controller.duration;
-            if (duration == null) {
-              return;
-            }
-            final position = value * duration.inMilliseconds;
-            controller.update(
-                Duration(milliseconds: position.round()), duration);
-          },
-          value: (controller.position != null &&
-                  controller.duration != null &&
-                  controller.position!.inMilliseconds > 0 &&
-                  controller.position!.inMilliseconds <
-                      controller.duration!.inMilliseconds)
-              ? controller.position!.inMilliseconds /
-                  controller.duration!.inMilliseconds
-              : 0.0,
-        ),
-        Semantics(
-          label: "Play button",
-          child: Text(
-            controller.position != null
-                ? '${controller.positionText} / ${controller.durationText}'
-                : controller.duration != null
-                    ? controller.durationText
-                    : '',
-            style: const TextStyle(fontSize: 16.0, color: Colors.amber),
+            ],
           ),
-        ),
-      ],
+          Slider(
+            activeColor: Colors.amber,
+            inactiveColor: Colors.grey,
+            onChanged: (value) {
+              final duration = controller.duration;
+              if (duration == null) {
+                return;
+              }
+              final position = value * duration.inMilliseconds;
+              controller.update(
+                  Duration(milliseconds: position.round()), duration);
+            },
+            value: (controller.position != null &&
+                    controller.duration != null &&
+                    controller.position!.inMilliseconds > 0 &&
+                    controller.position!.inMilliseconds <
+                        controller.duration!.inMilliseconds)
+                ? controller.position!.inMilliseconds /
+                    controller.duration!.inMilliseconds
+                : 0.0,
+          ),
+          Semantics(
+            label: "Play button",
+            child: Text(
+              controller.position != null
+                  ? '${controller.positionText} / ${controller.durationText}'
+                  : controller.duration != null
+                      ? controller.durationText
+                      : '00:00:00',
+              style: const TextStyle(fontSize: 16.0, color: Colors.amber),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
